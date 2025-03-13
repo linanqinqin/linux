@@ -5774,10 +5774,6 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 	gpa_t gpa;
 	u64 error_code;
 
-	/* linanqinqin */
-	pr_info("[linanqinqin] in handle_ept_violation: vCPU=%p accessed GPA=0x%llx\n", vcpu, gpa);
-	/* end */
-
 	exit_qualification = vmx_get_exit_qual(vcpu);
 
 	/*
@@ -5793,6 +5789,10 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 
 	gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
 	trace_kvm_page_fault(vcpu, gpa, exit_qualification);
+
+	/* linanqinqin */
+	pr_info("[linanqinqin] in handle_ept_violation: vCPU=%p accessed GPA=0x%llx\n", vcpu, gpa);
+	/* end */
 
 	/* Is it a read fault? */
 	error_code = (exit_qualification & EPT_VIOLATION_ACC_READ)
