@@ -5774,6 +5774,10 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 	gpa_t gpa;
 	u64 error_code;
 
+	/* linanqinqin */
+	pr_info("[linanqinqin] in handle_ept_violation: vCPU=%p accessed GPA=0x%llx\n", vcpu, gpa);
+	/* end */
+
 	exit_qualification = vmx_get_exit_qual(vcpu);
 
 	/*
