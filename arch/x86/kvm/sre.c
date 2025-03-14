@@ -7,6 +7,7 @@
  */
 
 #include <linux/slab.h>  // For kmalloc/kfree
+#include <linux/spinlock.h>
 
 #include "sre.h"
 
