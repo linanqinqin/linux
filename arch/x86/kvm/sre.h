@@ -3,6 +3,7 @@
 
 #include <linux/types.h>
 #include <linux/hashtable.h>
+#include <linux/spinlock.h>
 #include <linux/kvm_host.h>  // For gpa_t
 
 #define SRE_HASH_BITS 16

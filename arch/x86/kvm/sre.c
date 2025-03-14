@@ -33,7 +33,7 @@ void sre_flags_cleanup(void) {
 }  
 
 // Add a GPA to the hash table
-struct sre_flags *sre_flags_new(gpa_t gpa) {
+static struct sre_flags *sre_flags_new(gpa_t gpa) {
     struct sre_flags *entry = kmalloc(sizeof(*entry), GFP_KERNEL);
     if (!entry) return NULL;
 
@@ -50,7 +50,7 @@ struct sre_flags *sre_flags_new(gpa_t gpa) {
 }
 
 // Remove a GPA from the hash table
-void sre_flgas_remove(gpa_t gpa) {
+static void sre_flags_remove(gpa_t gpa) {
     struct sre_flags *entry;
     hash_for_each_possible(sre_metadata_hash, entry, node, gpa) {
         if (entry->gpa == gpa) {
