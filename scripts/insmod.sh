@@ -31,7 +31,7 @@ fi
 sign_module() {
     local module=$1
     if [ -f "$SIGN_TOOL" ] && [ -f "$SIGN_KEY_PEM" ] && [ -f "$SIGN_KEY_X509" ]; then
-        echo "Signing module: $module"
+        echo "SIGN $MODULES_DIR/$module"
         $SIGN_TOOL sha512 "$SIGN_KEY_PEM" "$SIGN_KEY_X509" "$module"
     else
         echo "Skipping signing (signing tools or keys not found)."
@@ -41,7 +41,7 @@ sign_module() {
 # Function to compress a module
 compress_module() {
     local module=$1
-    echo "Compressing module: $module"
+    echo "ZSTD $MODULES_DIR/$module.zst"
     zstd -f "$module" -o "$module.zst"
 }
 
@@ -50,7 +50,7 @@ install_module() {
     local module=$1
     local dest_dir="$MODULES_DIR/$(dirname "$module")"
 
-    echo "Installing module: $module.zst to $dest_dir"
+    echo "INSTALL $MODULES_DIR/$module.zst"
     mkdir -p "$dest_dir"
     cp "$module.zst" "$dest_dir/"
 }
@@ -59,9 +59,9 @@ install_module() {
 for module in "${MODULES[@]}"; do
     if [ -f "$module" ]; then
         # echo "Processing module: $module"
-        SIGN "$module"
-        ZSTD "$module"
-        INSTALL "$module"
+        sign_module "$module"
+        compress_module "$module"
+        install_module "$module"
     else
         echo "Module not found: $module"
     fi
