@@ -34,6 +34,10 @@
 #include "xen.h"
 #include "smm.h"
 
+/* linanqinqin */
+#include "sre.h"
+/* end */
+
 #include <linux/clocksource.h>
 #include <linux/interrupt.h>
 #include <linux/kvm.h>
@@ -14011,6 +14015,11 @@ static int __init kvm_x86_init(void)
 {
 	kvm_init_xstate_sizes();
 
+	/* linanqinqin */
+	// initialize the sre_flags hashmap 
+	sre_flags_init(); 
+	pr_info("[linanqinqin] in kvm_x86_init: SRE-enabled KVM loaded\n");
+	/* end */
 	kvm_mmu_x86_module_init();
 	mitigate_smt_rsb &= boot_cpu_has_bug(X86_BUG_SMT_RSB) && cpu_smt_possible();
 	return 0;
@@ -14020,5 +14029,9 @@ module_init(kvm_x86_init);
 static void __exit kvm_x86_exit(void)
 {
 	WARN_ON_ONCE(static_branch_unlikely(&kvm_has_noapic_vcpu));
+	/* linanqinqin */
+	sre_flags_cleanup();
+	pr_info("[linanqinqin] in kvm_x86_init: SRE-enabled KVM unloaded\n");
+	/* end */
 }
 module_exit(kvm_x86_exit);
