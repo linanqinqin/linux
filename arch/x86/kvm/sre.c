@@ -50,18 +50,18 @@ static struct sre_flags *sre_flags_new(gpa_t gpa) {
 }
 
 // Remove a GPA from the hash table
-static void sre_flags_remove(gpa_t gpa) {
-    struct sre_flags *entry;
-    hash_for_each_possible(sre_metadata_hash, entry, node, gpa) {
-        if (entry->gpa == gpa) {
-            spin_lock(&sre_flags_spinlock);
-            hash_del(&entry->node);
-            spin_unlock(&sre_flags_spinlock);
-            kfree(entry);
-            break;
-        }
-    }
-}
+// static void sre_flags_remove(gpa_t gpa) {
+//     struct sre_flags *entry;
+//     hash_for_each_possible(sre_metadata_hash, entry, node, gpa) {
+//         if (entry->gpa == gpa) {
+//             spin_lock(&sre_flags_spinlock);
+//             hash_del(&entry->node);
+//             spin_unlock(&sre_flags_spinlock);
+//             kfree(entry);
+//             break;
+//         }
+//     }
+// }
 
 // Lookup sre_flags for a GPA
 struct sre_flags *sre_flags_lookup(gpa_t gpa) {  
