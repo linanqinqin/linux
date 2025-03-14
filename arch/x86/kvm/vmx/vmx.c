@@ -73,6 +73,8 @@
 #include "vmx_onhyperv.h"
 #include "posted_intr.h"
 
+#include "sre.h"
+
 MODULE_AUTHOR("Qumranet");
 MODULE_DESCRIPTION("KVM support for VMX (Intel VT-x) extensions");
 MODULE_LICENSE("GPL");
@@ -5773,6 +5775,9 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 	unsigned long exit_qualification;
 	gpa_t gpa;
 	u64 error_code;
+	/* linanqinqin */
+	struct sre_flags *sflags; 
+	/* end */
 
 	exit_qualification = vmx_get_exit_qual(vcpu);
 
@@ -5791,7 +5796,14 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
 	trace_kvm_page_fault(vcpu, gpa, exit_qualification);
 
 	/* linanqinqin */
-	pr_info("[linanqinqin] in handle_ept_violation: vCPU=%p accessed GPA=0x%llx\n", vcpu, gpa);
+	sflags = sre_flags_lookup(gpa);
+	if (sflags) {
+		pr_info("[linanqinqin] in handle_ept_violation: is_ept=%s, vCPU=%p accessed GPA=0x%llx\n", (sflags->is_ept)? "true": "false", vcpu, gpa);
+
+		/* this is a regular ept violation, unset the flag */
+		sflags->is_ept = false; 
+	}
+	// if sflags lookup failed, skip SRE logic
 	/* end */
 
 	/* Is it a read fault? */
