@@ -7,6 +7,10 @@
 struct __kernel_timespec;
 struct timezone;
 
+/* linanqinqin */
+int __vdso_lame_add(int x, int y);
+/* end */
+
 #if !defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64)
 struct old_timespec32;
 int __vdso_clock_getres(clockid_t clock, struct old_timespec32 *res);
