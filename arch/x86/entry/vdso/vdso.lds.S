@@ -17,6 +17,10 @@
 VERSION {
 	LINUX_2.6 {
 	global:
+		/* linanqinqin */
+		lame_add;
+		__vdso_lame_add;
+		/* end */
 		clock_gettime;
 		__vdso_clock_gettime;
 		gettimeofday;
