@@ -15,15 +15,6 @@
 
 #include "../../../../lib/vdso/gettimeofday.c"
 
-/* linanqinqin */
-int __vdso_lame_add(int x, int y) {
-	return x+y;
-}
-
-int lame_add(int, int)
-	__attribute__((weak, alias("__vdso_lame_add")));
-/* end */
-
 int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
 {
 	return __cvdso_gettimeofday(tv, tz);
