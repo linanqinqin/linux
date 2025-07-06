@@ -106,6 +106,9 @@ $(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO
 #
 # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
 #
+# /* linanqinqin */
+CFLAGS_REMOVE_vlame.o = -pg
+# /* end */
 CFLAGS_REMOVE_vclock_gettime.o = -pg
 CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
 CFLAGS_REMOVE_vgetcpu.o = -pg
