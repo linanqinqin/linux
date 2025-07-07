@@ -4,10 +4,11 @@
 /*
  * Copyright (C) 2025 Nanqinqin Li <linanqinqin@princeton.edu>. All Rights Reserved.
  */
+#include <unistd.h>
 #include <vdso/lame.h>
 
-void __vdso_lame_entry(void) {
-	return;
+__attribute__((naked)) void __vdso_lame_entry(void) {
+	asm volatile("iretq");
 }
 
 int __vdso_lame_add(int x, int y) {
