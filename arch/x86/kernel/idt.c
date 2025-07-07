@@ -12,6 +12,9 @@
 #include <asm/hw_irq.h>
 #include <asm/ia32.h>
 #include <asm/idtentry.h>
+/* linanqinqin */
+#include <asm/lame.h>
+/* end */
 
 #define DPL0		0x0
 #define DPL3		0x3
@@ -96,6 +99,9 @@ static const __initconst struct idt_data def_idts[] = {
 	INTG(X86_TRAP_MF,		asm_exc_coprocessor_error),
 	INTG(X86_TRAP_AC,		asm_exc_alignment_check),
 	INTG(X86_TRAP_XF,		asm_exc_simd_coprocessor_error),
+	/* linanqinqin */
+	G(X86_TRAP_LAME, asm_exc_lame, DEFAULT_STACK, GATE_TRAP, DPL3, __USER_CS), 
+	/* end */
 
 #ifdef CONFIG_X86_32
 	TSKG(X86_TRAP_DF,		GDT_ENTRY_DOUBLEFAULT_TSS),
