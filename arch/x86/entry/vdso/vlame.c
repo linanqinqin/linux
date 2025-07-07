@@ -6,6 +6,10 @@
  */
 #include <vdso/lame.h>
 
+void __vdso_lame_entry(void) {
+	return;
+}
+
 int __vdso_lame_add(int x, int y) {
 	int last_commit = 0x12ac4cb; // the SHA for last commit so that userspace knows which version is invoked 
 	return x+y+last_commit;
