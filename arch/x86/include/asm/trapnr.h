@@ -29,7 +29,7 @@
 #define X86_TRAP_VC		29	/* VMM Communication Exception */
 #define X86_TRAP_IRET		32	/* IRET Exception */
 /* linanqinqin */ 
-#define X86_TRAP_LAME 	0xf1 /* Latency-Aware Memory Exception */
+#define X86_TRAP_LAME 	22 /* Latency-Aware Memory Exception */
 /* end */
 
 #endif
