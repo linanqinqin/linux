@@ -11,10 +11,31 @@
 __thread struct lame_thread_data lame_tls_data __attribute__((visibility("hidden")));
 
 __attribute__((naked)) void __vdso_lame_entry(void) {
-	asm volatile(
-		"incq %r13\n"  /* Increment r13 register */
-		"iretq\n"
-	);
+    asm volatile(
+        /* Save registers we'll use */
+        "pushq %rax\n"
+        "pushq %rcx\n"
+        "pushq %rdx\n"
+        
+        /* Get current thread's lame_tls_data via TLS */
+        /* On x86-64, TLS is accessed via %fs segment */
+        "movq %%fs:0, %rax\n"           /* Get TLS base address */
+        "addq $lame_tls_data@tpoff, %rax\n"  /* Add offset to lame_tls_data */
+        
+        /* Step 1: Take current lame_count and put it in r13 */
+        "movq 144(%rax), %r13\n"        /* lame_count is at offset 144 in lame_thread_data */
+        
+        /* Step 2: Put value from r12 into lame_count */
+        "movq %r12, 144(%rax)\n"
+        
+        /* Restore registers */
+        "popq %rdx\n"
+        "popq %rcx\n"
+        "popq %rax\n"
+        
+        /* Return from interrupt */
+        "iretq\n"
+    );
 }
 
 int __vdso_lame_add(int x, int y) {
