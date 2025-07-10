@@ -17,7 +17,7 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
 }
 
 int __vdso_lame_add(int x, int y) {
-	int last_commit = 0xa928e31; // the SHA for last commit so that userspace knows which version is invoked 
+	int last_commit = 0x9092d3b; // the SHA for last commit so that userspace knows which version is invoked 
 	return x+y+last_commit;
 }
 
