@@ -8,7 +8,7 @@
 
 __attribute__((naked)) void __vdso_lame_entry(void) {
 	asm volatile(
-		"incq %%r13\n"  /* Increment r13 register */
+		"incq %r13\n"  /* Increment r13 register */
 		"iretq\n"
 	);
 }
