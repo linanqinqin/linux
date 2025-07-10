@@ -6,12 +6,9 @@
  */
 #include <vdso/lame.h>
 
-/* Global counter to track handler executions */
-volatile int lame_handler_count __attribute__((section(".data")));
-
 __attribute__((naked)) void __vdso_lame_entry(void) {
 	asm volatile(
-		"incq lame_handler_count\n"
+		"incq %%r13\n"  /* Increment r13 register */
 		"iretq\n"
 	);
 }
