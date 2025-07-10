@@ -20,7 +20,7 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
         /* Get current thread's lame_tls_data via TLS */
         /* For shared objects, we need to use a different approach */
         /* We'll use the GOT to get the TLS offset, then access via %fs */
-        "movq lame_tls_data@GOTTPOFF(%%rip), %rax\n"  /* Get TLS offset */
+        "movq lame_tls_data@GOTTPOFF(%rip), %rax\n"  /* Get TLS offset */
         "addq %fs:0, %rax\n"                         /* Add TLS base */
         
         /* Step 1: Take current lame_count and put it in r13 */
