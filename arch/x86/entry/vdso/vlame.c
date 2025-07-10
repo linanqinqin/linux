@@ -6,8 +6,14 @@
  */
 #include <vdso/lame.h>
 
+/* Global counter to track handler executions */
+volatile int lame_handler_count __attribute__((section(".data")));
+
 __attribute__((naked)) void __vdso_lame_entry(void) {
-	asm volatile("iretq");
+	asm volatile(
+		"incq lame_handler_count\n"
+		"iretq\n"
+	);
 }
 
 int __vdso_lame_add(int x, int y) {
