@@ -19,7 +19,7 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
         
         /* Get current thread's lame_tls_data via TLS */
         /* On x86-64, TLS is accessed via %fs segment */
-        "movq %%fs:0, %rax\n"           /* Get TLS base address */
+        "movq %fs:0, %rax\n"           /* Get TLS base address */
         "addq $lame_tls_data@tpoff, %rax\n"  /* Add offset to lame_tls_data */
         
         /* Step 1: Take current lame_count and put it in r13 */
