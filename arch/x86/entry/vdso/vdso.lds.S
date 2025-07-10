@@ -18,6 +18,7 @@ VERSION {
 	LINUX_2.6 {
 	global:
 		/* linanqinqin */
+		lame_handler_count;
 		__vdso_lame_entry;
 		lame_add;
 		__vdso_lame_add;
