@@ -65,6 +65,26 @@ struct lame_thread_data {
     uint32_t reserved;
 } __attribute__((packed, aligned(64)));
 
+#define MAX_CPU_CORES 256  /* Or whatever maximum */
+
+struct lame_bundle_data {
+    /* Active bundle for this CPU */
+    struct lame_handle *bundle_handle;
+    
+    /* Context storage for coroutines */
+    struct lame_ctx ctx_storage[LAME_COROUTINE_DEPTH];
+    
+    /* Bundle metadata */
+    uint64_t bundle_id;
+    uint64_t last_switch_tsc;
+    uint32_t switch_count;
+    uint32_t cpu_id;
+} __attribute__((packed, aligned(64)));
+
+/* Global array - one entry per CPU core */
+static struct lame_bundle_data lame_bundle_array[MAX_CPU_CORES] 
+    __attribute__((visibility("hidden")));
+
 #endif /* _ASM_X86_VDSO_LAME_DATA_H */
 
 /* end */

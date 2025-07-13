@@ -7,9 +7,6 @@
 #include <vdso/lame.h>
 #include <asm/vdso/lame_data.h>
 
-/* Thread-local storage for LAME data */
-__thread struct lame_thread_data lame_tls_data __attribute__((visibility("hidden")));
-
 __attribute__((naked)) void __vdso_lame_entry(void) {
     asm volatile(
         /* Save registers we'll use */
@@ -17,17 +14,12 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
         "pushq %rcx\n"
         "pushq %rdx\n"
         
-        /* Get current thread's lame_tls_data via TLS */
-        /* For shared objects, we need to use a different approach */
-        /* We'll use the GOT to get the TLS offset, then access via %fs */
-        "movq lame_tls_data@GOTTPOFF(%rip), %rax\n"  /* Get TLS offset */
-        "addq %fs:0, %rax\n"                         /* Add TLS base */
+        /* Get CPU ID using rdtscp */
+        "rdtscp\n"                    /* Returns CPU ID in %ecx */
+        "andl $0xFF, %ecx\n"          /* Mask to get CPU ID (assuming < 256 cores) */
         
-        /* Step 1: Take current lame_count and put it in r13 */
-        "movq 144(%rax), %r13\n"        /* lame_count is at offset 144 in lame_thread_data */
-        
-        /* Step 2: Put value from r12 into lame_count */
-        "movq %r12, 144(%rax)\n"
+        /* Put CPU ID in r13 */
+        "movq %rcx, %r13\n"
         
         /* Restore registers */
         "popq %rdx\n"
