@@ -40,50 +40,32 @@ struct lame_handle {
     /* Padding for alignment */
     uint8_t reserved[7];
     
-    /* Array of context pointers */
-    struct lame_ctx *ctx[LAME_COROUTINE_DEPTH];
+    /* Context storage for coroutines */
+    struct lame_ctx ctx[LAME_COROUTINE_DEPTH];
     
     /* Bundle metadata */
     uint64_t bundle_id;           /* Unique bundle identifier */
     uint64_t last_switch_tsc;     /* TSC of last context switch */
     uint32_t switch_count;        /* Number of switches in this bundle */
-    uint32_t reserved2;
-} __attribute__((packed, aligned(64)));
-
-/* LAME per-thread data structure - stored in TLS */
-struct lame_thread_data {
-    /* Pointer to this thread's bundle handle */
-    struct lame_handle *bundle_handle;
-    
-    /* Thread-specific context storage */
-    struct lame_ctx ctx_storage[LAME_COROUTINE_DEPTH];
-    
-    /* Thread metadata */
-    uint64_t thread_id;           /* Unique thread identifier */
-    uint64_t lame_count;          /* Number of LAMEs handled */
-    uint32_t status;              /* Thread status flags */
-    uint32_t reserved;
+    uint32_t cpu_id;              /* CPU this bundle is assigned to */
 } __attribute__((packed, aligned(64)));
 
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
-struct lame_bundle_data {
-    /* Active bundle for this CPU */
-    struct lame_handle *bundle_handle;
-    
-    /* Context storage for coroutines */
-    struct lame_ctx ctx_storage[LAME_COROUTINE_DEPTH];
-    
-    /* Bundle metadata */
-    uint64_t bundle_id;
-    uint64_t last_switch_tsc;
-    uint32_t switch_count;
-    uint32_t cpu_id;
-} __attribute__((packed, aligned(64)));
-
 /* Global array - one entry per CPU core */
-static struct lame_bundle_data lame_bundle_array[MAX_CPU_CORES] 
+static struct lame_handle lame_handle_array[MAX_CPU_CORES] 
     __attribute__((visibility("hidden")));
+
+
+// Offsets for struct lame_handle and struct lame_ctx fields
+#define LAME_HANDLE_SIZE         ((int)sizeof(struct lame_handle))
+#define LAME_HANDLE_ACTIVE       ((int)offsetof(struct lame_handle, active))
+#define LAME_HANDLE_CTX          ((int)offsetof(struct lame_handle, ctx))
+#define LAME_HANDLE_SWITCH_COUNT ((int)offsetof(struct lame_handle, switch_count))
+
+#define LAME_CTX_SIZE            ((int)sizeof(struct lame_ctx))
+#define LAME_CTX_R13             ((int)offsetof(struct lame_ctx, r13))
+#define LAME_CTX_VALID           ((int)offsetof(struct lame_ctx, valid))
 
 #endif /* _ASM_X86_VDSO_LAME_DATA_H */
 
