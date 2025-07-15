@@ -52,9 +52,6 @@ struct lame_handle {
 
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
-/* Global array - one entry per CPU core */
-static struct lame_handle lame_handle_array[MAX_CPU_CORES];
-
 
 // Offsets for struct lame_handle and struct lame_ctx fields
 #define LAME_HANDLE_SIZE         ((int)sizeof(struct lame_handle))
