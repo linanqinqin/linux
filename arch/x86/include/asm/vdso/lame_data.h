@@ -53,7 +53,8 @@ struct lame_handle {
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
 /* Global array - one entry per CPU core */
-struct lame_handle lame_handle_array[MAX_CPU_CORES];
+struct lame_handle lame_handle_array[MAX_CPU_CORES] 
+    __attribute__((visibility("hidden")));
 
 
 // Offsets for struct lame_handle and struct lame_ctx fields
