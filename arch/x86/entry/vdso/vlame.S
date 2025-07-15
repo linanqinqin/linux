@@ -1,4 +1,6 @@
 #include <linux/linkage.h>
+#include <asm/vdso/lame_data.h>
+
 .code64
 .section .text
 
@@ -36,17 +38,21 @@ SYM_CODE_START(__vdso_lame_entry)
     /* Get current active index */
     movzbl LAME_HANDLE_ACTIVE(%rdx), %eax   /* active index -> eax */
 
+    /* Get the offset of the current active ctx */
+    movq %rax, %r10
+    imulq $LAME_CTX_SIZE, %r10      /* r10 = index * LAME_CTX_SIZE */
+
     /* Save r13 to current active context's r13 */
-    movq %r13, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
-    addq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    movq %r13, LAME_HANDLE_CTX(%rdx,%r10,1)
+    addq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%r10,1)
     movq %r13, (%rdx)
-    subq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    subq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%r10,1)
 
     /* Mark current context as valid */
-    movl $1, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
-    addq $LAME_CTX_VALID, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    movl $1, LAME_HANDLE_CTX(%rdx,%r10,1)
+    addq $LAME_CTX_VALID, LAME_HANDLE_CTX(%rdx,%r10,1)
     movl $1, (%rdx)
-    subq $LAME_CTX_VALID, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    subq $LAME_CTX_VALID, LAME_HANDLE_CTX(%rdx,%r10,1)
 
     /* Switch to next coroutine */
     xorl $1, %eax           /* flip active index (0->1, 1->0) */
@@ -54,10 +60,10 @@ SYM_CODE_START(__vdso_lame_entry)
 
     /* Get next context */
     movzbl %al, %eax
-    movq LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE), %r13
-    addq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    movq LAME_HANDLE_CTX(%rdx,%r10,1), %r13
+    addq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%r10,1)
     movq (%rdx), %r13
-    subq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%rax,LAME_CTX_SIZE)
+    subq $LAME_CTX_R13, LAME_HANDLE_CTX(%rdx,%r10,1)
 
     /* Increment switch count */
     incl LAME_HANDLE_SWITCH_COUNT(%rdx)
