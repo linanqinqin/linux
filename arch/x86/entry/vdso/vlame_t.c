@@ -7,9 +7,6 @@
 #include <vdso/lame.h>
 #include <asm/vdso/lame_data.h>
 
-// The LAME handler is now implemented in assembly in vlame.S
-extern void __vdso_lame_entry(void);
-
 int __vdso_lame_add(int x, int y) {
     int last_commit = 0x95a9354; // the SHA for last commit so that userspace knows which version is invoked 
     return x+y+last_commit;
