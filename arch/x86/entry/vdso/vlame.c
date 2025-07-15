@@ -8,7 +8,7 @@
 #include <asm/vdso/lame_data.h>
 
 /* Global array - one entry per CPU core */
-static struct lame_handle lame_handle_array[MAX_CPU_CORES];
+struct lame_handle lame_handle_array[MAX_CPU_CORES];
 
 __attribute__((naked)) void __vdso_lame_entry(void) {
     asm volatile(
