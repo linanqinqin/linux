@@ -53,19 +53,19 @@ struct lame_handle {
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
 /* Global array - one entry per CPU core */
-struct lame_handle lame_handle_array[MAX_CPU_CORES] 
+static struct lame_handle lame_handle_array[MAX_CPU_CORES] 
     __attribute__((visibility("hidden")));
 
 
 // Offsets for struct lame_handle and struct lame_ctx fields
-// #define LAME_HANDLE_SIZE         ((int)sizeof(struct lame_handle))
-// #define LAME_HANDLE_ACTIVE       ((int)offsetof(struct lame_handle, active))
-// #define LAME_HANDLE_CTX          ((int)offsetof(struct lame_handle, ctx))
-// #define LAME_HANDLE_SWITCH_COUNT ((int)offsetof(struct lame_handle, switch_count))
+#define LAME_HANDLE_SIZE         ((int)sizeof(struct lame_handle))
+#define LAME_HANDLE_ACTIVE       ((int)offsetof(struct lame_handle, active))
+#define LAME_HANDLE_CTX          ((int)offsetof(struct lame_handle, ctx))
+#define LAME_HANDLE_SWITCH_COUNT ((int)offsetof(struct lame_handle, switch_count))
 
-// #define LAME_CTX_SIZE            ((int)sizeof(struct lame_ctx))
-// #define LAME_CTX_R13             ((int)offsetof(struct lame_ctx, r13))
-// #define LAME_CTX_VALID           ((int)offsetof(struct lame_ctx, valid))
+#define LAME_CTX_SIZE            ((int)sizeof(struct lame_ctx))
+#define LAME_CTX_R13             ((int)offsetof(struct lame_ctx, r13))
+#define LAME_CTX_VALID           ((int)offsetof(struct lame_ctx, valid))
 
 #endif /* _ASM_X86_VDSO_LAME_DATA_H */
 
