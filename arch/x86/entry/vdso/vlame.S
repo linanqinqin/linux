@@ -1,5 +1,4 @@
 #include <linux/linkage.h>
-#include <asm/vdso/lame_data.h>
 
 .code64
 .section .text
