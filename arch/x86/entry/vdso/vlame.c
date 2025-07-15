@@ -18,6 +18,8 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
         "rdtscp\n"                    /* Returns CPU ID in %ecx */
         "andl $0xFF, %ecx\n"          /* Mask to get CPU ID (assuming < 256 cores) */
         
+        "leaq lame_handle_array(%rip), %rdx\n"
+
         /* Put CPU ID in r13 */
         "movq %rcx, %r13\n"
         
