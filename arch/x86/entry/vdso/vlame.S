@@ -1,6 +1,6 @@
+#include <linux/linkage.h>
+.code64
 .section .text
-.global __vdso_lame_entry
-.type __vdso_lame_entry, @function
 
 /* Offsets and sizes from struct lame_handle and struct lame_ctx */
 /* These should match the C header! */
@@ -12,7 +12,8 @@
 .equ LAME_CTX_R13, 104
 .equ LAME_CTX_VALID, 144
 
-__vdso_lame_entry:
+    .align 16
+SYM_CODE_START(__vdso_lame_entry)
     /* Prologue: save clobbered registers */
     pushq %rax
     pushq %rcx
@@ -69,4 +70,5 @@ __vdso_lame_entry:
     popq %rax
 
     /* Return from interrupt */
-    iretq 
+    iretq
+SYM_CODE_END(__vdso_lame_entry) 
