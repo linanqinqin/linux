@@ -31,6 +31,7 @@ SYM_CODE_START(__vdso_lame_entry)
     mulq %rcx               /* rax = cpu_id * sizeof(lame_handle) */
 
     /* Get pointer to handle */
+    .extern lame_handle_array
     leaq lame_handle_array(%rip), %rdx
     addq %rax, %rdx         /* rdx = &lame_handle_array[cpu_id] */
 
