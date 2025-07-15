@@ -6,13 +6,13 @@
 
 /* Offsets and sizes from struct lame_handle and struct lame_ctx */
 /* These should match the C header! */
-/* .equ LAME_HANDLE_SIZE, 352
+.equ LAME_HANDLE_SIZE, 352
 .equ LAME_HANDLE_ACTIVE, 0
 .equ LAME_HANDLE_CTX, 8
 .equ LAME_HANDLE_SWITCH_COUNT, 344
 .equ LAME_CTX_SIZE, 160
 .equ LAME_CTX_R13, 104
-.equ LAME_CTX_VALID, 144 */
+.equ LAME_CTX_VALID, 144 
 
     .align 16
 SYM_CODE_START(__vdso_lame_entry)
