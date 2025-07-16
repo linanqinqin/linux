@@ -204,10 +204,12 @@ quiet_cmd_vdso_and_check = VDSO    $@
 clean-files := vdso32.so vdso32.so.dbg vdso64* vdso-image-*.c vdsox32.so*
 # /* linanqinqin */
 # Host tool to generate assembly header from C struct definitions
+HOSTCFLAGS_gen_lame_data_offsets.o += -I$(srctree)/arch/x86/include -I$(srctree)/include
+
 gen_lame_data_offsets := gen_lame_data_offsets
 
 $(obj)/gen_lame_data_offsets: $(src)/gen_lame_data_offsets.c
-	$(HOSTCC) -o $@ $<
+	$(HOSTCC) $(HOSTCFLAGS_gen_lame_data_offsets.o) -o $@ $<
 
 $(obj)/lame_data_asm.h: $(obj)/gen_lame_data_offsets $(srctree)/arch/x86/include/asm/vdso/lame_data.h
 	$< > $@
