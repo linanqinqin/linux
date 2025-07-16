@@ -41,7 +41,7 @@ int main(void) {
     printf("#define LAME_CTX_R12 %zu\n", offsetof(struct lame_ctx, r12));
     printf("#define LAME_CTX_R14 %zu\n", offsetof(struct lame_ctx, r14));
     printf("#define LAME_CTX_R15 %zu\n", offsetof(struct lame_ctx, r15));
-    printf("#define LAME_CTX_IN_USE %zu\n", offsetof(struct lame_ctx, in_use));
+    printf("#define LAME_CTX_IN_USE %zu\n\n", offsetof(struct lame_ctx, in_use));
 
     printf("#ifndef LAME_ASM_STORAGE\n");
     printf("#define LAME_ASM_STORAGE\n");
