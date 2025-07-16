@@ -7,3 +7,4 @@ vdso32-int80-syms.lds
 vdso-image-*.c
 vdso2c
 !vlame_asm.S
+!vlame.S
