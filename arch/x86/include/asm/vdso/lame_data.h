@@ -44,23 +44,15 @@ struct lame_handle {
     uint64_t last_switch_tsc;     /* TSC of last context switch */
     uint32_t switch_count;        /* Number of switches in this bundle */
     uint32_t cpu_id;              /* CPU this bundle is assigned to */
-    
+
     /* Context storage for coroutines */
     struct lame_ctx ctx[LAME_COROUTINE_DEPTH];
 } __attribute__((packed, aligned(64)));
 
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
-
-// Offsets for struct lame_handle and struct lame_ctx fields
-#define LAME_HANDLE_SIZE         ((int)sizeof(struct lame_handle))
-#define LAME_HANDLE_ACTIVE       ((int)offsetof(struct lame_handle, active))
-#define LAME_HANDLE_CTX          ((int)offsetof(struct lame_handle, ctx))
-#define LAME_HANDLE_SWITCH_COUNT ((int)offsetof(struct lame_handle, switch_count))
-
-#define LAME_CTX_SIZE            ((int)sizeof(struct lame_ctx))
-#define LAME_CTX_R13             ((int)offsetof(struct lame_ctx, r13))
-#define LAME_CTX_VALID           ((int)offsetof(struct lame_ctx, valid))
+/* Global array - one entry per CPU core */
+struct lame_handle lame_handle_array[MAX_CPU_CORES];
 
 #endif /* _ASM_X86_VDSO_LAME_DATA_H */
 
