@@ -16,23 +16,43 @@ __attribute__((naked)) void __vdso_lame_entry(void) {
         "pushq %rax\n"
         "pushq %rcx\n"
         "pushq %rdx\n"
-        
+        "pushq %rsi\n"
+        "pushq %rdi\n" 
+
         /* Get CPU ID using rdtscp */
         "rdtscp\n"                    /* Returns CPU ID in %ecx */
         "andl $0xFF, %ecx\n"          /* Mask to get CPU ID (assuming < 256 cores) */
         
-        "leaq lame_handle_array(%rip), %rdx\n"
+        /* Array index: cpuid * sizeof(lame_handle) */
+        "movq %[lame_handle_size], %rax\n"
+        "mulq %rcx\n"               /* rax = cpuid * sizeof(lame_handle) */ 
 
-        /* Put CPU ID in r13 */
-        "movq %rcx, %r13\n"
+        "leaq lame_handle_array(%rip), %rdx\n"
+        "addq %rax, %rdx\n"         /* rdx -> lame_handle_array[cpuid] */
+
+        /* get offset of the current active index */
+        "movzbl %[lame_handle_active](%rdx), %r10\n" /* r10 = active index */
+        "imulq %[lame_ctx_size], %r10\n"            /* r10 = active index * sizeof(lame_ctx) */
+        "addq %[lame_ctx_r13], %r10\n"              /* r10 -> lame_handle_array[cpuid].ctx[active_index].r13 */
+
+        /* save r13 to the current active ctx */
+        "movq %r13, (%r10)\n"
         
         /* Restore registers */
+        "popq %rdi\n"
+        "popq %rsi\n"
         "popq %rdx\n"
         "popq %rcx\n"
         "popq %rax\n"
         
         /* Return from interrupt */
         "iretq\n"
+        : 
+        : [lame_handle_size] "i" (LAME_HANDLE_SIZE),
+          [lame_ctx_size] "i" (LAME_CTX_SIZE),
+          [lame_ctx_r13] "i" (LAME_CTX_R13),
+          [lame_handle_active] "i" (LAME_HANDLE_ACTIVE)
+        : "rax", "rcx", "rdx", "rsi", "rdi", "r10", "r13", "memory"
     );
 }
 
