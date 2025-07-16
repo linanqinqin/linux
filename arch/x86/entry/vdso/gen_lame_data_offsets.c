@@ -44,6 +44,7 @@ int main(void) {
     printf("#define LAME_CTX_IN_USE %zu\n", offsetof(struct lame_ctx, in_use));
 
     printf("\n#ifdef __ASSEMBLY__\n");
+    printf(".data\n");
     printf(".globl lame_handle_array\n");
     printf(".type lame_handle_array, @object\n");
     printf(".size lame_handle_array, %zu\n", sizeof(lame_handle_array));
