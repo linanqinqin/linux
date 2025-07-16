@@ -2,7 +2,7 @@
 // gen_lame_data_offsets.c
 #include <stdio.h>
 #include <stddef.h>
-#include "arch/x86/include/asm/vdso/lame_data.h"
+#include <asm/vdso/lame_data.h>
 
 int main(void) {
     printf("/* linanqinqin */\n");
