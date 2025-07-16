@@ -206,11 +206,11 @@ clean-files := vdso32.so vdso32.so.dbg vdso64* vdso-image-*.c vdsox32.so*
 # Host tool to generate assembly header from C struct definitions
 gen_lame_data_offsets := gen_lame_data_offsets
 
-gen_lame_data_offsets: gen_lame_data_offsets.c
+$(obj)/gen_lame_data_offsets: $(src)/gen_lame_data_offsets.c
 	$(HOSTCC) -o $@ $<
 
-lame_data_asm.h: gen_lame_data_offsets arch/x86/include/asm/vdso/lame_data.h
-	./gen_lame_data_offsets > lame_data_asm.h
+$(obj)/lame_data_asm.h: $(obj)/gen_lame_data_offsets $(srctree)/arch/x86/include/asm/vdso/lame_data.h
+	$< > $@
 
-vlame.o: lame_data_asm.h
+$(obj)/vlame.o: $(obj)/lame_data_asm.h
 # /* end */	
