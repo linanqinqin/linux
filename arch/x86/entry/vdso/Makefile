@@ -211,4 +211,6 @@ gen_lame_data_offsets: gen_lame_data_offsets.c
 
 lame_data_asm.h: gen_lame_data_offsets arch/x86/include/asm/vdso/lame_data.h
 	./gen_lame_data_offsets > lame_data_asm.h
+
+vlame.o: lame_data_asm.h
 # /* end */	
