@@ -9,7 +9,7 @@ include $(srctree)/lib/vdso/Makefile.include
 # Files to link into the vDSO:
 vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o vgetrandom.o vgetrandom-chacha.o
 # /* linanqinqin */
-vobjs-y += vlame.o 
+vobjs-y += vlame.o vlame_util.o
 # /* end */
 vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
 vobjs32-y += vdso32/vclock_gettime.o vdso32/vgetcpu.o
@@ -73,6 +73,7 @@ $(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO
 #
 # /* linanqinqin */
 CFLAGS_REMOVE_vlame.o = -pg
+CFLAGS_REMOVE_vlame_util.o = -pg
 # /* end */
 CFLAGS_REMOVE_vclock_gettime.o = -pg
 CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
