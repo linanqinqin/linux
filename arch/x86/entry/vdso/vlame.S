@@ -18,7 +18,7 @@ SYM_CODE_START(__vdso_lame_entry)
     andl $0xFF, %ecx        /* Mask to get CPU ID (assuming < 256 cores) */
 
     /* 2. Use cpuid as index into lame_handle_array */
-    movq $lame_handle_array, %rdx
+    leaq lame_handle_array(%rip), %rdx
     movl %ecx, %eax
     imulq $LAME_HANDLE_SIZE, %rax
     addq %rax, %rdx         /* rdx = &lame_handle_array[cpuid] */
