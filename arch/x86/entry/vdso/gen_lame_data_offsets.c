@@ -43,11 +43,15 @@ int main(void) {
     printf("#define LAME_CTX_R15 %zu\n", offsetof(struct lame_ctx, r15));
     printf("#define LAME_CTX_IN_USE %zu\n", offsetof(struct lame_ctx, in_use));
 
+    // printf("#ifdef LAME_DEFINE_STORAGE\n");
     printf(".section .data\n");
-    printf(".globl lame_handle_array\n");
-    printf(".type lame_handle_array, @object\n");
-    printf(".size lame_handle_array, %zu\n", sizeof(lame_handle_array));
-    printf(".align 64\n");
+    printf("    .align 64\n");
+    printf("    .globl lame_handle_array\n");
+    printf("    .type lame_handle_array, @object\n");
+    printf("lame_handle_array:\n");
+    printf("    .zero %zu\n", sizeof(lame_handle_array));
+    printf("    .size lame_handle_array, %zu\n", sizeof(lame_handle_array));
+    // printf("#endif\n");
 
     printf("\n#endif /* LAME_DATA_ASM_H */\n");
     printf("/* end */\n");
