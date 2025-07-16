@@ -2,6 +2,7 @@
 // gen_lame_data_offsets.c
 #include <stdio.h>
 #include <stddef.h>
+// Use kernel-style include path for host tool
 #include <asm/vdso/lame_data.h>
 
 int main(void) {
