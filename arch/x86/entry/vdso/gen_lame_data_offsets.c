@@ -18,7 +18,7 @@ int main(void) {
     printf("#define LAME_HANDLE_SWITCH_COUNT %zu\n", offsetof(struct lame_handle, switch_count));
     printf("#define LAME_HANDLE_BUNDLE_ID %zu\n", offsetof(struct lame_handle, bundle_id));
     printf("#define LAME_HANDLE_LAST_SWITCH_TSC %zu\n", offsetof(struct lame_handle, last_switch_tsc));
-    printf("#define LAME_HANDLE_CPU_ID %zu\n", offsetof(struct lame_handle, cpu_id));
+    printf("#define LAME_HANDLE_CPU_ID %zu\n\n", offsetof(struct lame_handle, cpu_id));
 
     // struct lame_ctx
     printf("#define LAME_CTX_SIZE %zu\n", sizeof(struct lame_ctx));
@@ -42,6 +42,11 @@ int main(void) {
     printf("#define LAME_CTX_R14 %zu\n", offsetof(struct lame_ctx, r14));
     printf("#define LAME_CTX_R15 %zu\n", offsetof(struct lame_ctx, r15));
     printf("#define LAME_CTX_IN_USE %zu\n\n", offsetof(struct lame_ctx, in_use));
+
+    // macros
+    printf("#define LAME_COROUTINE_DEPTH %d\n", LAME_COROUTINE_DEPTH);
+    printf("#define LAME_COROUTINE_INC_MASK %d\n", LAME_COROUTINE_DEPTH - 1);
+    printf("#define LAME_MAX_CPU_CORES %d\n\n", LAME_MAX_CPU_CORES);
 
     printf("#ifndef LAME_ASM_STORAGE\n");
     printf("#define LAME_ASM_STORAGE\n");

@@ -30,14 +30,11 @@ struct lame_ctx {
 } __attribute__((packed, aligned(64)));
 
 /* LAME bundle handle - manages coroutine switching */
-#define LAME_COROUTINE_DEPTH 2
+#define LAME_COROUTINE_DEPTH 2      /* for performance, this should be a power of 2 */
 
 struct lame_handle {
     /* Active coroutine index */
-    uint32_t active;
-    
-    /* Padding for alignment */
-    uint32_t reserved[1];
+    uint64_t active;
     
     /* Bundle metadata */
     uint64_t bundle_id;           /* Unique bundle identifier */
