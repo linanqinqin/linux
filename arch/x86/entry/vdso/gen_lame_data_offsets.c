@@ -46,7 +46,7 @@ int main(void) {
     // macros
     printf("#define LAME_COROUTINE_DEPTH %d\n", LAME_COROUTINE_DEPTH);
     printf("#define LAME_COROUTINE_INC_MASK %d\n", LAME_COROUTINE_DEPTH - 1);
-    printf("#define LAME_MAX_CPU_CORES %d\n\n", LAME_MAX_CPU_CORES);
+    printf("#define LAME_MAX_CPU_CORES %d\n\n", MAX_CPU_CORES);
 
     printf("#ifndef LAME_ASM_STORAGE\n");
     printf("#define LAME_ASM_STORAGE\n");
