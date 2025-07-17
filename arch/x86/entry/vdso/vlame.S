@@ -26,7 +26,7 @@ SYM_CODE_START(__vdso_lame_entry)
     addq %rax, %rdx         /* rdx = &lame_handle_array[cpuid] */
 
     /* 3. Get .active field (index into ctx array) */
-    movl LAME_HANDLE_ACTIVE(%rdx), %r10
+    movq LAME_HANDLE_ACTIVE(%rdx), %r10      /* load 64-bit active */
     imulq $LAME_CTX_SIZE, %r10
     
     /* 4. Save r13 to lame_handle_array[cpuid].ctx[active].r13 */
@@ -37,11 +37,11 @@ SYM_CODE_START(__vdso_lame_entry)
     movq %r13, (%r11)
 
     /* 5. Increment active index */
-    movl LAME_HANDLE_ACTIVE(%rdx), %r10
-    addl $1, %r10
-    andl $LAME_COROUTINE_INC_MASK, %r10 /* r10 = (active + 1) mod LAME_COROUTINE_DEPTH */
-    movl %r10, LAME_HANDLE_ACTIVE(%rdx) /* Update .active in memory */
-    imulq $LAME_CTX_SIZE, %r10       /* r10 = active * sizeof(lame_ctx) */
+    movq LAME_HANDLE_ACTIVE(%rdx), %r10      /* load 64-bit active */
+    addq $1, %r10
+    andq $LAME_COROUTINE_INC_MASK, %r10
+    movq %r10, LAME_HANDLE_ACTIVE(%rdx)      /* store 64-bit active */
+    imulq $LAME_CTX_SIZE, %r10               /* r10 = active * sizeof(lame_ctx) */
 
     /* 6. Restore r13 from the new active ctx lame_handle_array[cpuid].ctx[active].r13 */
     movq %rdx, %r11
