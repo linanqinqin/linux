@@ -48,8 +48,8 @@ SECTIONS
 
 	.rodata		: {
 		*(.rodata*)
-		/* linanqinqin */
-		// *(.data*) /* orignal */
+		/* linanqinqin original code */
+		/* *(.data*) */
 		/* end */
 		*(.sdata*)
 		*(.got.plt) *(.got)
