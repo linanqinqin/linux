@@ -22,6 +22,7 @@ SYM_CODE_START(__vdso_lame_entry)
     // movq lame_handle_array(%rip), %rdx /* test mem read */
     /* 2. Use cpuid as index into lame_handle_array */
     leaq lame_handle_array(%rip), %rdx
+    movq (%rdx), %rdx /* test mem read */
     // movq $99, (%rdx)    /* test mem write */
     // movl %ecx, %eax
     // imulq $LAME_HANDLE_SIZE, %rax
