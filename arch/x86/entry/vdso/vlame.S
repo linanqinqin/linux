@@ -9,18 +9,19 @@ SYM_CODE_START(__vdso_lame_entry)
     /* Save registers that will be used */
     // pushq %rax
     // pushq %rcx
-    // pushq %rdx
+    pushq %rdx
     // pushq %rsi
     // pushq %rdi
     // pushq %r10
     // pushq %r11
 
-    // /* 1. Get cpuid using rdtscp */
+    /* 1. Get cpuid using rdtscp */
     // rdtscp
     // andl $0xFF, %ecx        /* Mask to get CPU ID (assuming < 256 cores) */
 
-    // /* 2. Use cpuid as index into lame_handle_array */
-    // leaq lame_handle_array(%rip), %rdx
+    /* 2. Use cpuid as index into lame_handle_array */
+    leaq lame_handle_array(%rip), %rdx
+    movq $99, (%rdx)    /* test mem write */
     // movl %ecx, %eax
     // imulq $LAME_HANDLE_SIZE, %rax
     // addq %rax, %rdx         /* rdx = &lame_handle_array[cpuid] */
@@ -55,7 +56,7 @@ SYM_CODE_START(__vdso_lame_entry)
     // popq %r10
     // popq %rdi
     // popq %rsi
-    // popq %rdx
+    popq %rdx
     // popq %rcx
     // popq %rax
 
