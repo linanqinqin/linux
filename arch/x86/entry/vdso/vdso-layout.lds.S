@@ -48,7 +48,9 @@ SECTIONS
 
 	.rodata		: {
 		*(.rodata*)
-		*(.data*)
+		/* linanqinqin */
+		// *(.data*) /* orignal */
+		/* end */
 		*(.sdata*)
 		*(.got.plt) *(.got)
 		*(.gnu.linkonce.d.*)
@@ -56,6 +58,10 @@ SECTIONS
 		*(.dynbss*)
 		*(.gnu.linkonce.b.*)
 	}						:text
+
+	.data		: {
+		*(.data*)
+	}						:data_writable
 
 	/*
 	 * Discard .note.gnu.property sections which are unused and have
@@ -105,6 +111,7 @@ SECTIONS
 PHDRS
 {
 	text		PT_LOAD		FLAGS(5) FILEHDR PHDRS; /* PF_R|PF_X */
+	data_writable	PT_LOAD		FLAGS(6);		/* PF_R|PF_W */
 	dynamic		PT_DYNAMIC	FLAGS(4);		/* PF_R */
 	note		PT_NOTE		FLAGS(4);		/* PF_R */
 	eh_frame_hdr	PT_GNU_EH_FRAME;
