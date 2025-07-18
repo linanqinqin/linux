@@ -245,7 +245,10 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
 	vma = _install_special_mapping(mm,
 				       text_start,
 				       image->size,
-				       VM_READ|VM_EXEC|
+					   /* linanqinqin */
+					   /* VM_READ|VM_EXEC| */ // original code
+				       VM_READ|VM_WRITE|VM_EXEC|
+					   /* end */
 				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
 				       &vdso_mapping);
 
