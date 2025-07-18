@@ -104,6 +104,9 @@ SECTIONS
  */
 PHDRS
 {
+	/* linanqinqin original code */
+	/* text		PT_LOAD		FLAGS(5) FILEHDR PHDRS; /* PF_R|PF_X */
+	/* end */
 	text		PT_LOAD		FLAGS(7) FILEHDR PHDRS; /* PF_R|PF_W|PF_X */
 	dynamic		PT_DYNAMIC	FLAGS(4);		/* PF_R */
 	note		PT_NOTE		FLAGS(4);		/* PF_R */
