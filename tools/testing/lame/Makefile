@@ -14,13 +14,13 @@ write_active_print: write_active_print.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 int: int.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $< 
 
 print_vdso_lame: print_vdso_lame.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 cpuid: cpuid.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $< 
 
 reg: reg.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
