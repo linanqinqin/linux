@@ -5,9 +5,6 @@
 #include <string.h>
 #include <asm/vdso/lame_data.h>
 
-// External declaration of the VDSO symbol
-extern struct lame_handle lame_handle_array[];
-
 int main() {
     char input[10];
     
