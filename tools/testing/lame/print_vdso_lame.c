@@ -4,7 +4,6 @@
 #include <link.h>      // for AT_SYSINFO_EHDR
 #include <sys/auxv.h>
 extern void __vdso_lame_entry(void);
-extern struct lame_handle lame_handle_array[];
 
 int main(void) {
     // Method A: via dlsym
@@ -15,7 +14,6 @@ int main(void) {
     printf("via dlsym:    lame_handle_array = %p\n", sym);
 
     printf("via direct print: __vdso_lame_entry = %p\n", (void *)__vdso_lame_entry);
-    printf("via direct print: lame_handle_array = %p\n", (void *)lame_handle_array);
 
     // Method B: via getauxval + symbol offset
     Elf64_Ehdr *vdso_base = (Elf64_Ehdr *)getauxval(AT_SYSINFO_EHDR);
