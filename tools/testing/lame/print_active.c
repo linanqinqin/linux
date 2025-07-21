@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <string.h>
-#include <arch/x86/include/asm/vdso/lame_data.h>
+#include <asm/vdso/lame_data.h>
 
 // External declaration of the VDSO symbol
 extern struct lame_handle lame_handle_array[];

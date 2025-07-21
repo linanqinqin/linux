@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O0 -g
+INCLUDE_PATH = -I../../../../arch/x86/include
+CFLAGS = -Wall -Wextra -O0 -g $(INCLUDE_PATH)
 VDSO_LAME_PATH ?=
 
 # If VDSO_LAME_PATH is set, add it to LDFLAGS
