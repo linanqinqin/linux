@@ -1,7 +1,6 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/syscall.h>
 #include <sched.h>
 #include <stdint.h>  /* For uint64_t */
