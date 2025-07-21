@@ -3,7 +3,7 @@ INCLUDE_PATH = -I../../../arch/x86/include
 CFLAGS = -Wall -Wextra -O0 -g $(INCLUDE_PATH)
 LDFLAGS = ../../../arch/x86/entry/vdso/vdso64.so
 
-TARGETS = print_active write_active_print
+TARGETS = print_active write_active_print int print_vdso_lame cpuid reg add
 
 all: $(TARGETS)
 
@@ -11,6 +11,21 @@ print_active: print_active.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 write_active_print: write_active_print.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+int: int.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+print_vdso_lame: print_vdso_lame.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+cpuid: cpuid.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+reg: reg.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+add: add.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 clean:
