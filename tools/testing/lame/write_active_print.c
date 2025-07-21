@@ -4,9 +4,6 @@
 #include <sys/mman.h>
 #include <asm/vdso/lame_data.h>
 
-// External declaration of the VDSO symbol
-extern struct lame_handle lame_handle_array[];
-
 int main() {
     printf("Program A: VDSO Write Test\n");
     printf("lame_handle_array address: %p\n", (void*)lame_handle_array);
