@@ -8,10 +8,10 @@ TARGETS = print_active write_active_print int print_vdso_lame  reg add
 all: $(TARGETS)
 
 print_active: print_active.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $< 
 
 write_active_print: write_active_print.c
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $< 
 
 int: int.c
 	$(CC) $(CFLAGS) -o $@ $< 
