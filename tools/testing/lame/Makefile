@@ -3,7 +3,7 @@ INCLUDE_PATH = -I../../../arch/x86/include
 CFLAGS = -Wall -Wextra -O0 -g $(INCLUDE_PATH)
 LDFLAGS = ../../../arch/x86/entry/vdso/vdso64.so
 
-TARGETS = print_active write_active_print int print_vdso_lame  reg add
+TARGETS = print_active write_active_print int print_vdso_lame reg add switch_r13
 
 all: $(TARGETS)
 
@@ -27,6 +27,9 @@ reg: reg.c
 
 add: add.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+switch_r13: switch_r13.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
 	rm -f $(TARGETS)
