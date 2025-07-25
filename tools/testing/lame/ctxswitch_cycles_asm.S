@@ -25,7 +25,7 @@ ctxswitch_cycles_asm:
     rdtscp
     shl $32, %rdx
     or %rdx, %rax
-    mov %rax, %r14      # r14 = start
+    push %rax      # save start on stack
 
     # int 0x1f
     int $0x1f
@@ -36,8 +36,9 @@ ctxswitch_cycles_asm:
     xor %ecx, %ecx
     rdtscp
     shl $32, %rdx
-    or %rdx, %rax
-    mov %rax, %r15      # r15 = end
+    or %rdx, %rax  # rax = end
+
+    pop %rcx       # rcx = start
 
     # Restore all general-purpose registers
     pop %r15
@@ -55,7 +56,5 @@ ctxswitch_cycles_asm:
     pop %rcx
     pop %rbx
 
-    # Compute cycles = end - start
-    mov %r15, %rax
-    sub %r14, %rax
+    sub %rcx, %rax # rax = end - start
     ret 
