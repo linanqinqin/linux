@@ -11,7 +11,7 @@ _start:
     mov NITER(%rip), %r13       # r13 = NITER
 
 loop_start:
-    cmp %r12, %r13
+    cmp %r13, %r12
     jge done
 
     # Save all general-purpose registers
