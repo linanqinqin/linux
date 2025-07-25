@@ -1,8 +1,8 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <x86intrin.h>
+#include <unistd.h>
+#include <sys/mman.h>
 
 #define NITER 10
 
