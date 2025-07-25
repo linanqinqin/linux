@@ -16,7 +16,7 @@
 
 int main() {
     unsigned long long cycles[NITER];
-    uint32_t aux;
+    unsigned int aux;
     for (int i = 0; i < NITER; ++i) {
         unsigned long long start, end;
         /* Save all general-purpose registers */
@@ -39,9 +39,9 @@ int main() {
             "movq %%r15, 112(%0)\n\t"
             : : "r"(regs) : "memory"
         );
-        start = __rdtsc();
+        start = __rdtscp(&aux);
         asm volatile ("int $0x1f" ::: "memory");
-        end = __rdtsc();
+        end = __rdtscp(&aux);
         /* Restore all general-purpose registers */
         asm volatile (
             "movq 0(%0), %%rax\n\t"
