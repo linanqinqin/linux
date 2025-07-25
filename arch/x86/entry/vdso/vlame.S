@@ -97,21 +97,21 @@ SYM_CODE_START(__vdso_lame_entry)
     // pushq LAME_CTX_RIP(%r11)   /* RIP */
 
     /* Step 9: Restore all general-purpose registers from new context */
-    movq LAME_CTX_RAX(%r11), %rax
-    movq LAME_CTX_RBX(%r11), %rbx
-    movq LAME_CTX_RCX(%r11), %rcx
-    movq LAME_CTX_RDX(%r11), %rdx
-    movq LAME_CTX_RSI(%r11), %rsi
-    movq LAME_CTX_RDI(%r11), %rdi
-    movq LAME_CTX_RBP(%r11), %rbp
-    movq LAME_CTX_R8(%r11),  %r8
-    movq LAME_CTX_R9(%r11),  %r9
-    movq LAME_CTX_R10(%r11), %r10
-    movq LAME_CTX_R12(%r11), %r12
-    movq LAME_CTX_R13(%r11), %r13
-    movq LAME_CTX_R14(%r11), %r14
-    movq LAME_CTX_R15(%r11), %r15
-    movq LAME_CTX_R11(%r11), %r11   /* r11 must be the last to restore */
+    // movq LAME_CTX_RAX(%r11), %rax
+    // movq LAME_CTX_RBX(%r11), %rbx
+    // movq LAME_CTX_RCX(%r11), %rcx
+    // movq LAME_CTX_RDX(%r11), %rdx
+    // movq LAME_CTX_RSI(%r11), %rsi
+    // movq LAME_CTX_RDI(%r11), %rdi
+    // movq LAME_CTX_RBP(%r11), %rbp
+    // movq LAME_CTX_R8(%r11),  %r8
+    // movq LAME_CTX_R9(%r11),  %r9
+    // movq LAME_CTX_R10(%r11), %r10
+    // movq LAME_CTX_R12(%r11), %r12
+    // movq LAME_CTX_R13(%r11), %r13
+    // movq LAME_CTX_R14(%r11), %r14
+    // movq LAME_CTX_R15(%r11), %r15
+    // movq LAME_CTX_R11(%r11), %r11   /* r11 must be the last to restore */
 
     /* Optionally, clear in_use for this context */
     // movl $0, LAME_CTX_IN_USE(%r11)
