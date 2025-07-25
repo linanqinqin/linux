@@ -3,21 +3,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <x86intrin.h> 
 
 #define NITER 10
 
-static inline uint64_t rdtscp(uint32_t *aux)
-{
-    uint32_t lo, hi;
-    asm volatile("rdtscp" : "=a"(lo), "=d"(hi), "=c"(*aux) ::);
-    return ((uint64_t)hi << 32) | lo;
-}
+// static inline uint64_t rdtscp(uint32_t *aux)
+// {
+//     uint32_t lo, hi;
+//     asm volatile("rdtscp" : "=a"(lo), "=d"(hi), "=c"(*aux) ::);
+//     return ((uint64_t)hi << 32) | lo;
+// }
 
 int main() {
-    uint64_t cycles[NITER];
+    unsigned long long cycles[NITER];
     uint32_t aux;
     for (int i = 0; i < NITER; ++i) {
-        uint64_t start, end;
+        unsigned long long start, end;
         /* Save all general-purpose registers */
         uint64_t regs[16];
         asm volatile (
@@ -38,9 +39,9 @@ int main() {
             "movq %%r15, 112(%0)\n\t"
             : : "r"(regs) : "memory"
         );
-        start = rdtscp(&aux);
+        start = __rdtsc();
         asm volatile ("int $0x1f" ::: "memory");
-        end = rdtscp(&aux);
+        end = __rdtsc();
         /* Restore all general-purpose registers */
         asm volatile (
             "movq 0(%0), %%rax\n\t"
@@ -63,7 +64,7 @@ int main() {
         cycles[i] = end - start;
     }
     for (int i = 0; i < NITER; ++i) {
-        printf("%lu\n", cycles[i]);
+        printf("%llu\n", cycles[i]);
     }
     return 0;
 } 
