@@ -9,7 +9,7 @@
 static inline uint64_t rdtscp(uint32_t *aux)
 {
     uint64_t tsc;
-    __asm__ __volatile__ ("rdtscp" : "=A"(tsc), "=c"(*aux) ::);
+    __asm__ volatile ("rdtscp" : "=A"(tsc), "=c"(*aux) ::);
     return tsc;
 }
 
@@ -20,7 +20,7 @@ int main() {
         uint64_t start, end;
         /* Save all general-purpose registers */
         uint64_t regs[16];
-        __asm__ __volatile__ (
+        __asm__ volatile (
             "movq %rax, 0(%0)\n\t"
             "movq %rbx, 8(%0)\n\t"
             "movq %rcx, 16(%0)\n\t"
@@ -39,10 +39,10 @@ int main() {
             : : "r"(regs) : "memory"
         );
         start = rdtscp(&aux);
-        __asm__ __volatile__ ("int $0x1f" ::: "memory");
+        __asm__ volatile ("int $0x1f" ::: "memory");
         end = rdtscp(&aux);
         /* Restore all general-purpose registers */
-        __asm__ __volatile__ (
+        __asm__ volatile (
             "movq 0(%0), %rax\n\t"
             "movq 8(%0), %rbx\n\t"
             "movq 16(%0), %rcx\n\t"
