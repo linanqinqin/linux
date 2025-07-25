@@ -39,7 +39,7 @@ int main() {
             : : "r"(regs) : "memory"
         );
         start = rdtscp(&aux);
-        asm volatile ("int $0x1f" ::: "memory");
+        // asm volatile ("int $0x1f" ::: "memory");
         end = rdtscp(&aux);
         /* Restore all general-purpose registers */
         asm volatile (
