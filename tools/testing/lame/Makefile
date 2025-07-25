@@ -31,8 +31,8 @@ add: add.c
 switch_r13: switch_r13.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-ctxswitch_cycles: ctxswitch_cycles.c
-	$(CC) $(CFLAGS) -o $@ $<
+ctxswitch_cycles: ctxswitch_cycles.c ctxswitch_cycles_asm.S
+	$(CC) $(CFLAGS) -o $@ ctxswitch_cycles.c ctxswitch_cycles_asm.S
 
 clean:
 	rm -f $(TARGETS)

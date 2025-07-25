@@ -173,3 +173,4 @@ sphinx_*/
 
 # delist assembly files (for case-insensitive file systems)
 !tools/testing/lame/ctxswitch_cycles.S
+!tools/testing/lame/ctxswitch_cycles_asm.S
