@@ -101,6 +101,7 @@ static const __initconst struct idt_data def_idts[] = {
 	INTG(X86_TRAP_XF,		asm_exc_simd_coprocessor_error),
 	/* linanqinqin */
 	G(X86_TRAP_LAME, asm_exc_lame, DEFAULT_STACK, GATE_TRAP, DPL3, __USER_CS), 
+	G(X86_TRAP_NOP, asm_exc_nop, DEFAULT_STACK, GATE_TRAP, DPL3, __USER_CS), 
 	/* end */
 
 #ifdef CONFIG_X86_32
