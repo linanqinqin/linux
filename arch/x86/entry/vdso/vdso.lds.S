@@ -20,6 +20,7 @@ VERSION {
 		/* linanqinqin */
 		lame_handle_array;
 		__vdso_lame_entry;
+		__vdso_nop_entry;
 		lame_add;
 		__vdso_lame_add;
 		/* end */

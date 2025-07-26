@@ -119,3 +119,8 @@ SYM_CODE_START(__vdso_lame_entry)
     /* Step 10: Return from interrupt (iretq will use the fabricated frame) */
     iretq
 SYM_CODE_END(__vdso_lame_entry) 
+
+    .align 16
+SYM_CODE_START(__vdso_nop_entry)
+    iretq
+SYM_CODE_END(__vdso_nop_entry) 
