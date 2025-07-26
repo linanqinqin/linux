@@ -39,6 +39,7 @@ ctxswitch_cycles_asm:
     or %rdx, %rax  # rax = end
 
     pop %rcx       # rcx = start
+    sub %rcx, %rax # rax = end - start (compute difference BEFORE restoring registers)
 
     # Restore all general-purpose registers
     pop %r15
@@ -56,5 +57,4 @@ ctxswitch_cycles_asm:
     pop %rcx
     pop %rbx
 
-    sub %rcx, %rax # rax = end - start
     ret 
