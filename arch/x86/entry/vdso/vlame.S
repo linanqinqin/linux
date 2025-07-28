@@ -97,7 +97,7 @@ SYM_CODE_START(__vdso_lame_entry)
     // pushq LAME_CTX_RIP(%r11)   /* RIP */
 
     /* Step 9: Restore all general-purpose registers from new context */
-    // movq LAME_CTX_RAX(%r11), %rax
+    movq LAME_CTX_RAX(%r11), %rax
     // movq LAME_CTX_RBX(%r11), %rbx
     // movq LAME_CTX_RCX(%r11), %rcx
     // movq LAME_CTX_RDX(%r11), %rdx
