@@ -111,7 +111,7 @@ SYM_CODE_START(__vdso_lame_entry)
     movq LAME_CTX_R13(%r11), %r13
     movq LAME_CTX_R14(%r11), %r14
     movq LAME_CTX_R15(%r11), %r15
-    // movq LAME_CTX_R11(%r11), %r11   /* r11 must be the last to restore */
+    movq LAME_CTX_R11(%r11), %r11   /* r11 must be the last to restore */
 
     /* Optionally, clear in_use for this context */
     // movl $0, LAME_CTX_IN_USE(%r11)
