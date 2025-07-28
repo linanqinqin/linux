@@ -58,12 +58,12 @@ SYM_CODE_START(__vdso_lame_entry)
     /* Step 6: Pop and save the interrupt frame (RIP, CS, RFLAGS, RSP, SS) */
     // popq %rax         /* error code (not processed) */
     
-    // popq %rax        /* RIP */
-    // movq %rax, LAME_CTX_RIP(%r11)
+    popq %rax        /* RIP */
+    movq %rax, LAME_CTX_RIP(%r11)
 
-    // popq %r10        /* CS  (not needed due to same-process switch) */
-    // popq %r10        /* RFLAGS */
-    // movq %r10, LAME_CTX_RFLAGS(%r11)
+    popq %r10        /* CS  (not needed due to same-process switch) */
+    popq %r10        /* RFLAGS */
+    movq %r10, LAME_CTX_RFLAGS(%r11)
     /* no ss:rsp popping due to same-ring handling */
     /* ss:rsp is set up and supplied by the kernel directly into the ctx */
 
@@ -73,9 +73,9 @@ SYM_CODE_START(__vdso_lame_entry)
     // movl $1, LAME_CTX_IN_USE(%r13)
 
     /* Step (only for single-thread switch testing): fabricate a new interrupt frame (which is the same one just popped)*/
-    // pushq %r10      /* RFLAGS */
-    // pushq $0x33     /* CS */
-    // pushq %rax      /* RIP */
+    pushq %r10      /* RFLAGS */
+    pushq $0x33     /* CS */
+    pushq %rax      /* RIP */
 
     /* Step 7: Increment active index and compute new context base in %r13 */
     /* reg values at this point:        */
