@@ -49,11 +49,7 @@ struct lame_handle {
 #define MAX_CPU_CORES 256  /* Or whatever maximum */
 
 /* Global array - one entry per CPU core */
-#ifdef __KERNEL__
 struct lame_handle lame_handle_array[MAX_CPU_CORES];
-#else
-extern struct lame_handle lame_handle_array[];
-#endif
 
 #endif /* _ASM_X86_VDSO_LAME_DATA_H */
 
