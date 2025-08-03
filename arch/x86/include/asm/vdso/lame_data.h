@@ -6,7 +6,6 @@
 #ifndef _ASM_X86_VDSO_LAME_DATA_H
 #define _ASM_X86_VDSO_LAME_DATA_H
 
-#include <linux/types.h>
 #include <stdint.h>
 
 /* LAME context structure - stores complete execution context */
