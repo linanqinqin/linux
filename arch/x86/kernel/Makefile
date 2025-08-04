@@ -150,6 +150,10 @@ obj-$(CONFIG_X86_CET)			+= cet.o
 
 obj-$(CONFIG_X86_USER_SHADOW_STACK)	+= shstk.o
 
+# /* linanqinqin */	
+obj-$(CONFIG_LAME)			+= lame.o
+# /* end */
+
 ###
 # 64 bit specific files
 ifeq ($(CONFIG_X86_64),y)
