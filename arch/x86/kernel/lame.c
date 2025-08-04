@@ -163,7 +163,7 @@ static int __init lame_init(void)
     }
     
     /* Create device class */
-    lame_class = class_create(THIS_MODULE, LAME_DEVICE_NAME);
+    lame_class = class_create(LAME_DEVICE_NAME);
     if (IS_ERR(lame_class)) {
         pr_err("Failed to create class: %ld\n", PTR_ERR(lame_class));
         ret = PTR_ERR(lame_class);
