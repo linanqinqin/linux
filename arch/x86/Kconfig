@@ -3058,8 +3058,8 @@ config HAVE_ATOMIC_IOMAP
 
 # /* linanqinqin */
 config LAME
-	bool "LAME (Latency-Aware Memory Exception) Runtime Configuration"
-	default y
+	tristate "LAME (Latency-Aware Memory Exception) Runtime Configuration"
+	default m
 	depends on X86_64
 	help
 	  This option enables the LAME (Latency-Aware Memory Exception) runtime
