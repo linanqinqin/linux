@@ -6,6 +6,7 @@ echo "[*] Building the kernel..."
 make -j$(nproc)
 
 echo "[*] Installing modules and kernel..."
-sudo make modules_install install
+sudo make M=arch/x86/kernel modules_install 
+sudo make install
 
 echo "[*] Done!"
