@@ -20,7 +20,7 @@ void __attribute__((naked)) my_lame_handler(void)
     asm volatile ("iretq");
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
     int fd;
     struct lame_arg arg;
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     /* Open the LAME device */
     fd = open("/dev/lame", O_RDWR);
     if (fd < 0) {
-        fprintf(stderr, "Failed to open /dev/lame\n");
+        fprintf(stderr, "[errno %d] Failed to open /dev/lame\n", errno);
         return 1;
     }
     
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     /* Test 1: Enable LAME */
     printf("\nTest 1: Enabling LAME...\n");
     arg.is_present = 1;
-    arg.handler_stub_addr = (void *)my_lame_handler;
+    arg.handler_stub_addr = (uint64_t)my_lame_handler;
     
     ret = ioctl(fd, LAME_REGISTER, &arg);
     if (ret < 0) {
