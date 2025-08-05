@@ -10,7 +10,7 @@
 #define _UAPI_LINUX_LAME_H
 
 #include <linux/ioctl.h>
-#include <linux/types.h>
+#include <stdint.h>
 
 /* IOCTL command codes */
 #define LAME_IOC_MAGIC 'L'
@@ -18,8 +18,8 @@
 
 /* Argument structure */
 struct lame_arg {
-    __u8 is_present;        /* Use __u8 instead of bool for ABI stability */
-    __u64 handler_stub_addr; /* Use __u64 for 64-bit compatibility */
+    uint8_t is_present;        /* Use uint8_t instead of bool for ABI stability */
+    uint64_t handler_stub_addr; /* Use uint64_t instead of void* for ABI stability */
 };
 
 #endif /* _UAPI_LINUX_LAME_H */ 
