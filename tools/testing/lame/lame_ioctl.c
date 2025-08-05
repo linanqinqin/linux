@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     /* Open the LAME device */
     fd = open("/dev/lame", O_RDWR);
     if (fd < 0) {
-        perror("Failed to open /dev/lame");
+        fprintf(stderr, "Failed to open /dev/lame\n");
         return 1;
     }
     
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     
     ret = ioctl(fd, LAME_REGISTER, &arg);
     if (ret < 0) {
-        perror("[errno %d] ioctl LAME_REGISTER (enable) failed", errno);
+        fprintf(stderr, "[errno %d] ioctl LAME_REGISTER (enable) failed\n", errno);
     } else {
         printf("LAME_REGISTER (enable) succeeded\n");
     }
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     
     ret = ioctl(fd, LAME_REGISTER, &arg);
     if (ret < 0) {
-        perror("[errno %d] ioctl LAME_REGISTER (disable) failed", errno);
+        fprintf(stderr, "[errno %d] ioctl LAME_REGISTER (disable) failed\n", errno);
     } else {
         printf("LAME_REGISTER (disable) succeeded\n");
     }
