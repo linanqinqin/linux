@@ -52,13 +52,13 @@ static const struct file_operations lame_fops = {
 /* File operation implementations */
 static int lame_open(struct inode *inode, struct file *file)
 {
-    pr_debug("LAME device opened\n");
+    pr_debug("[lame_open] LAME device opened\n");
     return 0;
 }
 
 static int lame_release(struct inode *inode, struct file *file)
 {
-    pr_debug("LAME device closed\n");
+    pr_debug("[lame_release] LAME device closed\n");
     return 0;
 }
 
@@ -68,26 +68,26 @@ static int lame_register_ioctl(struct file *file, unsigned long arg)
     struct lame_arg user_arg;
     int ret = 0;
     
-    pr_debug("LAME_REGISTER ioctl called\n");
+    pr_debug("[lame_register_ioctl] LAME_REGISTER ioctl called\n");
     
     /* Copy argument from user space */
     if (copy_from_user(&user_arg, (void __user *)arg, sizeof(user_arg))) {
-        pr_err("Failed to copy argument from user space\n");
+        pr_err("[lame_register_ioctl] Failed to copy argument from user space\n");
         return -EFAULT;
     }
     
-    pr_debug("LAME_REGISTER: is_present=%d, handler_addr=0x%llx\n", 
+    pr_debug("[lame_register_ioctl] LAME_REGISTER: is_present=%d, handler_addr=0x%llx\n", 
              user_arg.is_present, user_arg.handler_stub_addr);
     
     /* TODO: Implement actual LAME logic here */
     /* For now, just acknowledge the request */
     
     if (user_arg.is_present) {
-        pr_info("LAME_REGISTER: enabling LAME handler at 0x%llx\n", 
+        pr_info("[lame_register_ioctl] LAME_REGISTER: enabling LAME handler at 0x%llx\n", 
                 user_arg.handler_stub_addr);
         /* TODO: Enable LAME handler */
     } else {
-        pr_info("LAME_REGISTER: disabling LAME\n");
+        pr_info("[lame_register_ioctl] LAME_REGISTER: disabling LAME\n");
         /* TODO: Disable LAME handler */
     }
     
@@ -101,13 +101,13 @@ static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     
     /* Check if the command is for us */
     if (_IOC_TYPE(cmd) != LAME_IOC_MAGIC) {
-        pr_err("Invalid ioctl magic number\n");
+        pr_err("[lame_ioctl] Invalid ioctl magic number\n");
         return -ENOTTY;
     }
     
     /* Check if the command number is valid */
     if (_IOC_NR(cmd) > 1) {
-        pr_err("Invalid ioctl command number\n");
+        pr_err("[lame_ioctl] Invalid ioctl command number\n");
         return -ENOTTY;
     }
     
@@ -117,7 +117,7 @@ static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
         ret = lame_register_ioctl(file, arg);
         break;
     default:
-        pr_err("Unknown ioctl command: 0x%x\n", cmd);
+        pr_err("[lame_ioctl] Unknown ioctl command: 0x%x\n", cmd);
         ret = -ENOTTY;
         break;
     }
@@ -130,8 +130,6 @@ static int __init lame_init(void)
 {
     int ret;
     
-    pr_info("LAME module initializing...\n");
-    
     /* Allocate device number */
     if (major) {
         lame_dev = MKDEV(major, 0);
@@ -141,14 +139,14 @@ static int __init lame_init(void)
     }
     
     if (ret < 0) {
-        pr_err("Failed to allocate device number: %d\n", ret);
+        pr_err("[LAME module] Failed to allocate device number: %d\n", ret);
         return ret;
     }
     
     /* Create character device */
     lame_cdev = cdev_alloc();
     if (!lame_cdev) {
-        pr_err("Failed to allocate cdev\n");
+        pr_err("[LAME module] Failed to allocate cdev\n");
         ret = -ENOMEM;
         goto error_unregister;
     }
@@ -158,14 +156,14 @@ static int __init lame_init(void)
     
     ret = cdev_add(lame_cdev, lame_dev, 1);
     if (ret < 0) {
-        pr_err("Failed to add cdev: %d\n", ret);
+        pr_err("[LAME module] Failed to add cdev: %d\n", ret);
         goto error_cdev_del;
     }
     
     /* Create device class */
     lame_class = class_create(LAME_DEVICE_NAME);
     if (IS_ERR(lame_class)) {
-        pr_err("Failed to create class: %ld\n", PTR_ERR(lame_class));
+        pr_err("[LAME module] Failed to create class: %ld\n", PTR_ERR(lame_class));
         ret = PTR_ERR(lame_class);
         goto error_cdev_del;
     }
@@ -173,14 +171,13 @@ static int __init lame_init(void)
     /* Create device file */
     lame_device = device_create(lame_class, NULL, lame_dev, NULL, LAME_DEVICE_NAME);
     if (IS_ERR(lame_device)) {
-        pr_err("Failed to create device: %ld\n", PTR_ERR(lame_device));
+        pr_err("[LAME module] Failed to create device: %ld\n", PTR_ERR(lame_device));
         ret = PTR_ERR(lame_device);
         goto error_class_destroy;
     }
     
-    pr_info("LAME device created successfully (major=%d, minor=%d)\n", 
-            MAJOR(lame_dev), MINOR(lame_dev));
-    pr_info("Device file: /dev/%s\n", LAME_DEVICE_NAME);
+    pr_info("[LAME module] LAME device: /dev/%s (major=%d, minor=%d)\n", 
+            LAME_DEVICE_NAME, MAJOR(lame_dev), MINOR(lame_dev));
     
     return 0;
     
@@ -196,8 +193,6 @@ error_unregister:
 /* Module cleanup */
 static void __exit lame_exit(void)
 {
-    pr_info("LAME module unloading...\n");
-    
     /* Remove device file */
     if (lame_device) {
         device_destroy(lame_class, lame_dev);
@@ -216,7 +211,7 @@ static void __exit lame_exit(void)
     /* Unregister device number */
     unregister_chrdev_region(lame_dev, 1);
     
-    pr_info("LAME module unloaded successfully\n");
+    pr_info("[LAME module] unloaded\n");
 }
 
 /* Module information */
