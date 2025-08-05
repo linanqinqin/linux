@@ -1,5 +1,5 @@
 CC = gcc
-INCLUDE_PATH = -I../../../arch/x86/include -I/lib/modules/$(shell uname -r)/build/include/uapi
+INCLUDE_PATH = -I/tmp/lame-headers/include
 CFLAGS = -Wall -Wextra -O0 -g $(INCLUDE_PATH)
 LDFLAGS = ../../../arch/x86/entry/vdso/vdso64.so
 
