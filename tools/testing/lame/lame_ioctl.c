@@ -13,7 +13,7 @@
 #include <string.h>
 
 /* Include the LAME header */
-#include <uapi/linux/lame.h>
+#include <linux/lame.h>
 
 void __attribute__((naked)) my_lame_handler(void)
 {
