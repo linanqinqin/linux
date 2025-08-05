@@ -169,7 +169,7 @@ static int __init lame_init(void)
     }
     
     /* Create device file */
-    lame_device = device_create(lame_class, NULL, lame_dev, NULL, LAME_DEVICE_NAME, 0666); /* 0666 for non-root access */
+    lame_device = device_create(lame_class, NULL, lame_dev, NULL, LAME_DEVICE_NAME);
     if (IS_ERR(lame_device)) {
         pr_err("[LAME module] Failed to create device: %ld\n", PTR_ERR(lame_device));
         ret = PTR_ERR(lame_device);
