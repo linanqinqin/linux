@@ -41,7 +41,7 @@ int main(void)
     /* Test 1: Enable LAME */
     printf("\nTest 1: Enabling LAME...\n");
     arg.is_present = 1;
-    arg.handler_stub_addr = (uint64_t)my_lame_handler;
+    arg.handler_stub_addr = (__u64)my_lame_handler;
     
     ret = ioctl(fd, LAME_REGISTER, &arg);
     if (ret < 0) {
