@@ -64,10 +64,8 @@ static void pack_gate_lame(gate_desc *gate, unsigned type, unsigned long func,
 /* char device name */
 #define LAME_DEVICE_NAME "lame"
 
-/* Module parameters */
-static int major = 0;  /* 0 means auto-assign */
-module_param(major, int, 0);
-MODULE_PARM_DESC(major, "Major device number for LAME device");
+/* Device number - auto-assign */
+static int major = 0;
 
 /* Global variables */
 static dev_t lame_dev;
@@ -378,12 +376,5 @@ static void __exit lame_exit(void)
     pr_info("[LAME module] unloaded\n");
 }
 
-/* Module information */
-module_init(lame_init);
-module_exit(lame_exit);
-
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Nanqinqin Li");
-MODULE_DESCRIPTION("LAME (Latency-Aware Memory Exception) Runtime Configuration Module");
-MODULE_VERSION("1.0"); 
-/* end */
+/* Built-in module initialization */
+device_initcall(lame_init); 
