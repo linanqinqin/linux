@@ -30,6 +30,37 @@
 extern gate_desc idt_table[];
 extern struct desc_ptr idt_descr;
 
+/**
+ * pack_gate_lame - Create a gate descriptor for LAME handler
+ * @gate: Pointer to gate_desc structure to fill
+ * @type: Gate type (GATE_TRAP, GATE_INTERRUPT, etc.)
+ * @func: Handler function address
+ * @dpl: Descriptor Privilege Level
+ * @ist: Interrupt Stack Table index
+ * @seg: Code segment selector
+ *
+ * Similar to pack_gate but allows custom segment selection for x86_64.
+ */
+static void pack_gate_lame(gate_desc *gate, unsigned type, unsigned long func,
+                          unsigned dpl, unsigned ist, unsigned seg)
+{
+    gate->offset_low    = (u16) func;
+    gate->bits.p        = 1;
+    gate->bits.dpl      = dpl;
+    gate->bits.zero     = 0;
+    gate->bits.type     = type;
+    gate->offset_middle = (u16) (func >> 16);
+#ifdef CONFIG_X86_64
+    gate->segment       = seg;  /* Use provided segment instead of __KERNEL_CS */
+    gate->bits.ist      = ist;
+    gate->reserved      = 0;
+    gate->offset_high   = (u32) (func >> 32);
+#else
+    gate->segment       = seg;
+    gate->bits.ist      = 0;
+#endif
+}
+
 /* char device name */
 #define LAME_DEVICE_NAME "lame"
 
@@ -50,6 +81,8 @@ static int lame_release(struct inode *inode, struct file *file);
 static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 static int lame_enable_handler(__u64 handler_addr);
 static int lame_disable_handler(void);
+static void pack_gate_lame(gate_desc *gate, unsigned type, unsigned long func,
+                          unsigned dpl, unsigned ist, unsigned seg);
 
 /* File operations structure */
 static const struct file_operations lame_fops = {
@@ -177,17 +210,10 @@ static int lame_enable_handler(__u64 handler_addr)
     }
     
     /* Create the new IDT entry exactly as specified */
-    memset(&new_entry, 0, sizeof(new_entry));
-    new_entry.vector = X86_TRAP_LAME;
-    new_entry.bits.ist = DEFAULT_STACK;
-    new_entry.bits.type = GATE_TRAP;
-    new_entry.bits.dpl = DPL3;
-    new_entry.bits.p = 1;  /* Present bit */
-    new_entry.addr = handler_addr;
-    new_entry.segment = __USER_CS;
+    pack_gate_lame(&new_entry, GATE_TRAP, handler_addr, DPL3, DEFAULT_STACK, __USER_CS);
     
-    pr_debug("[lame_enable_handler] New entry: vector=%d, addr=0x%llx, type=%d, dpl=%d\n",
-             new_entry.vector, new_entry.addr, new_entry.bits.type, new_entry.bits.dpl);
+    pr_debug("[lame_enable_handler] New entry: addr=0x%llx, type=%d, dpl=%d\n",
+             handler_addr, GATE_TRAP, DPL3);
     
     /* Make IDT writable temporarily */
     ret = set_memory_rw((unsigned long)&idt_table, 1);
