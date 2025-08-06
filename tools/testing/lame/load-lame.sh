@@ -5,6 +5,10 @@
 
 set -e
 
+echo "this script is deprecated and will cause unexpected behavior."
+echo "exiting without doing anything."
+exit 0
+
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
     echo "This script needs to be run as root (use sudo)"
