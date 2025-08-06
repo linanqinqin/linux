@@ -181,6 +181,12 @@ static struct desc_ptr idt_descr __ro_after_init = {
 	.address	= (unsigned long) idt_table,
 };
 
+/* linanqinqin */
+/* Export IDT symbols for LAME module */
+EXPORT_SYMBOL(idt_table);
+EXPORT_SYMBOL(idt_descr);
+/* end */
+
 void load_current_idt(void)
 {
 	lockdep_assert_irqs_disabled();

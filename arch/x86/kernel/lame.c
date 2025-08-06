@@ -189,7 +189,6 @@ static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 static int lame_enable_handler(__u64 handler_addr)
 {
     gate_desc new_entry;
-    unsigned long idt_addr;
     int ret = 0;
     
     pr_debug("[lame_enable_handler] Setting up LAME handler at 0x%llx\n", handler_addr);
@@ -200,13 +199,6 @@ static int lame_enable_handler(__u64 handler_addr)
         return -EINVAL;
     }
     
-    /* Get the IDT table address */
-    idt_addr = (unsigned long)idt_table;
-    if (!idt_addr) {
-        pr_err("[lame_enable_handler] IDT table not available\n");
-        return -ENODEV;
-    }
-    
     /* Create the new IDT entry exactly as specified */
     pack_gate_lame(&new_entry, GATE_TRAP, handler_addr, DPL3, DEFAULT_STACK, __USER_CS);
     
@@ -214,7 +206,7 @@ static int lame_enable_handler(__u64 handler_addr)
              handler_addr, GATE_TRAP, DPL3);
     
     /* Make IDT writable temporarily */
-    ret = set_memory_rw((unsigned long)&idt_table, 1);
+    ret = set_memory_rw((unsigned long)idt_table, 1);
     if (ret < 0) {
         pr_err("[lame_enable_handler] Failed to make IDT writable: %d\n", ret);
         return ret;
@@ -227,7 +219,7 @@ static int lame_enable_handler(__u64 handler_addr)
     load_idt(&idt_descr);
     
     /* Make IDT read-only again */
-    ret = set_memory_ro((unsigned long)&idt_table, 1);
+    ret = set_memory_ro((unsigned long)idt_table, 1);
     if (ret < 0) {
         pr_err("[lame_enable_handler] Failed to make IDT read-only: %d\n", ret);
         /* Continue anyway as the handler is already installed */
@@ -245,17 +237,9 @@ static int lame_enable_handler(__u64 handler_addr)
 static int lame_disable_handler(void)
 {
     gate_desc non_entry;
-    unsigned long idt_addr;
     int ret = 0;
     
     pr_debug("[lame_disable_handler] Disabling LAME handler\n");
-    
-    /* Get the IDT table address */
-    idt_addr = (unsigned long)idt_table;
-    if (!idt_addr) {
-        pr_err("[lame_disable_handler] IDT table not available\n");
-        return -ENODEV;
-    }
     
     /* Create a minimal entry with just the present bit set to 0 */
     memset(&non_entry, 0, sizeof(non_entry));
@@ -264,7 +248,7 @@ static int lame_disable_handler(void)
     pr_debug("[lame_disable_handler] Disabling LAME entry (present=0)\n");
     
     /* Make IDT writable temporarily */
-    ret = set_memory_rw((unsigned long)&idt_table, 1);
+    ret = set_memory_rw((unsigned long)idt_table, 1);
     if (ret < 0) {
         pr_err("[lame_disable_handler] Failed to make IDT writable: %d\n", ret);
         return ret;
@@ -277,7 +261,7 @@ static int lame_disable_handler(void)
     load_idt(&idt_descr);
     
     /* Make IDT read-only again */
-    ret = set_memory_ro((unsigned long)&idt_table, 1);
+    ret = set_memory_ro((unsigned long)idt_table, 1);
     if (ret < 0) {
         pr_err("[lame_disable_handler] Failed to make IDT read-only: %d\n", ret);
         /* Continue anyway as the handler is already disabled */
