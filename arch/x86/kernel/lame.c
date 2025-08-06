@@ -19,7 +19,16 @@
 #include <asm/desc.h>
 #include <asm/trapnr.h>
 #include <asm/set_memory.h>
+#include <asm/segment.h>
 #include <uapi/linux/lame.h>
+
+/* Constants for IDT entry configuration */
+#define DEFAULT_STACK 0
+#define DPL3 0x3
+
+/* External declarations for IDT management */
+extern gate_desc idt_table[];
+extern struct desc_ptr idt_descr;
 
 /* char device name */
 #define LAME_DEVICE_NAME "lame"
@@ -39,6 +48,8 @@ static struct device *lame_device;
 static int lame_open(struct inode *inode, struct file *file);
 static int lame_release(struct inode *inode, struct file *file);
 static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+static int lame_enable_handler(__u64 handler_addr);
+static int lame_disable_handler(void);
 
 /* File operations structure */
 static const struct file_operations lame_fops = {
@@ -79,16 +90,26 @@ static int lame_register_ioctl(struct file *file, unsigned long arg)
     pr_debug("[lame_register_ioctl] LAME_REGISTER: is_present=%d, handler_addr=0x%llx\n", 
              user_arg.is_present, user_arg.handler_stub_addr);
     
-    /* TODO: Implement actual LAME logic here */
-    /* For now, just acknowledge the request */
-    
+    /* Implement actual LAME logic here */
     if (user_arg.is_present) {
         pr_info("[lame_register_ioctl] LAME_REGISTER: enabling LAME handler at 0x%llx\n", 
                 user_arg.handler_stub_addr);
-        /* TODO: Enable LAME handler */
+        
+        /* Enable LAME handler */
+        ret = lame_enable_handler(user_arg.handler_stub_addr);
+        if (ret < 0) {
+            pr_err("[lame_register_ioctl] Failed to enable LAME handler: %d\n", ret);
+            return ret;
+        }
     } else {
         pr_info("[lame_register_ioctl] LAME_REGISTER: disabling LAME\n");
-        /* TODO: Disable LAME handler */
+        
+        /* Disable LAME handler */
+        ret = lame_disable_handler();
+        if (ret < 0) {
+            pr_err("[lame_register_ioctl] Failed to disable LAME handler: %d\n", ret);
+            return ret;
+        }
     }
     
     return ret;
@@ -123,6 +144,123 @@ static long lame_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
     }
     
     return ret;
+}
+
+/* LAME handler management functions */
+
+/**
+ * lame_enable_handler - Enable the LAME exception handler
+ * @handler_addr: User-space handler address
+ *
+ * Creates a new IDT entry for X86_TRAP_LAME with the specified handler.
+ * The entry is configured as a trap gate with DPL3 and user code segment.
+ */
+static int lame_enable_handler(__u64 handler_addr)
+{
+    gate_desc new_entry;
+    unsigned long idt_addr;
+    int ret = 0;
+    
+    pr_debug("[lame_enable_handler] Setting up LAME handler at 0x%llx\n", handler_addr);
+    
+    /* Validate handler address */
+    if (!handler_addr) {
+        pr_err("[lame_enable_handler] Invalid handler address: 0x%llx\n", handler_addr);
+        return -EINVAL;
+    }
+    
+    /* Get the IDT table address */
+    idt_addr = (unsigned long)idt_table;
+    if (!idt_addr) {
+        pr_err("[lame_enable_handler] IDT table not available\n");
+        return -ENODEV;
+    }
+    
+    /* Create the new IDT entry exactly as specified */
+    memset(&new_entry, 0, sizeof(new_entry));
+    new_entry.vector = X86_TRAP_LAME;
+    new_entry.bits.ist = DEFAULT_STACK;
+    new_entry.bits.type = GATE_TRAP;
+    new_entry.bits.dpl = DPL3;
+    new_entry.bits.p = 1;  /* Present bit */
+    new_entry.addr = handler_addr;
+    new_entry.segment = __USER_CS;
+    
+    pr_debug("[lame_enable_handler] New entry: vector=%d, addr=0x%llx, type=%d, dpl=%d\n",
+             new_entry.vector, new_entry.addr, new_entry.bits.type, new_entry.bits.dpl);
+    
+    /* Make IDT writable temporarily */
+    ret = set_memory_rw((unsigned long)&idt_table, 1);
+    if (ret < 0) {
+        pr_err("[lame_enable_handler] Failed to make IDT writable: %d\n", ret);
+        return ret;
+    }
+    
+    /* Write the new entry to the IDT */
+    write_idt_entry(idt_table, X86_TRAP_LAME, &new_entry);
+    
+    /* Reload the IDT */
+    load_idt(&idt_descr);
+    
+    /* Make IDT read-only again */
+    ret = set_memory_ro((unsigned long)&idt_table, 1);
+    if (ret < 0) {
+        pr_err("[lame_enable_handler] Failed to make IDT read-only: %d\n", ret);
+        /* Continue anyway as the handler is already installed */
+    }
+    
+    pr_info("[lame_enable_handler] LAME handler successfully installed at 0x%llx\n", handler_addr);
+    return 0;
+}
+
+/**
+ * lame_disable_handler - Disable the LAME exception handler
+ *
+ * Disables the LAME exception handler by setting the present bit to 0.
+ */
+static int lame_disable_handler(void)
+{
+    gate_desc non_entry;
+    unsigned long idt_addr;
+    int ret = 0;
+    
+    pr_debug("[lame_disable_handler] Disabling LAME handler\n");
+    
+    /* Get the IDT table address */
+    idt_addr = (unsigned long)idt_table;
+    if (!idt_addr) {
+        pr_err("[lame_disable_handler] IDT table not available\n");
+        return -ENODEV;
+    }
+    
+    /* Create a minimal entry with just the present bit set to 0 */
+    memset(&non_entry, 0, sizeof(non_entry));
+    non_entry.bits.p = 0;  /* This is all we need to disable the entry */
+    
+    pr_debug("[lame_disable_handler] Disabling LAME entry (present=0)\n");
+    
+    /* Make IDT writable temporarily */
+    ret = set_memory_rw((unsigned long)&idt_table, 1);
+    if (ret < 0) {
+        pr_err("[lame_disable_handler] Failed to make IDT writable: %d\n", ret);
+        return ret;
+    }
+    
+    /* Write the modified entry back to the IDT */
+    write_idt_entry(idt_table, X86_TRAP_LAME, &non_entry);
+    
+    /* Reload the IDT */
+    load_idt(&idt_descr);
+    
+    /* Make IDT read-only again */
+    ret = set_memory_ro((unsigned long)&idt_table, 1);
+    if (ret < 0) {
+        pr_err("[lame_disable_handler] Failed to make IDT read-only: %d\n", ret);
+        /* Continue anyway as the handler is already disabled */
+    }
+    
+    pr_info("[lame_disable_handler] LAME handler successfully disabled\n");
+    return 0;
 }
 
 /* Module initialization */
