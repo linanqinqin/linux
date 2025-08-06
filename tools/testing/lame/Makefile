@@ -3,7 +3,7 @@ INCLUDE_PATH = -I/tmp/lame-headers/include
 CFLAGS = -Wall -Wextra -O0 -g $(INCLUDE_PATH)
 LDFLAGS = ../../../arch/x86/entry/vdso/vdso64.so
 
-TARGETS = print_active write_active_print int print_vdso_lame reg add switch_r13 ctxswitch_cycles lame_ioctl
+TARGETS = print_active write_active_print int_vdso print_vdso_lame reg add switch_r13 ctxswitch_cycles int_ioctl
 
 all: $(TARGETS)
 
@@ -13,7 +13,7 @@ print_active: print_active.c
 write_active_print: write_active_print.c
 	$(CC) $(CFLAGS) -o $@ $< 
 
-int: int.c
+int_vdso: int_vdso.c
 	$(CC) $(CFLAGS) -o $@ $< 
 
 print_vdso_lame: print_vdso_lame.c
@@ -34,7 +34,7 @@ switch_r13: switch_r13.c
 ctxswitch_cycles: ctxswitch_cycles.c ctxswitch_cycles_asm.S
 	$(CC) $(CFLAGS) -o $@ ctxswitch_cycles.c ctxswitch_cycles_asm.S
 
-lame_ioctl: lame_ioctl.c
+int_ioctl: int_ioctl.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
